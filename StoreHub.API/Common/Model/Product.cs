@@ -32,6 +32,11 @@
         public bool IsActive { get; set; }
     }
 
+    public class GetProductById
+    {
+        public int ProductId { get; set; }
+    }
+
     public class DeleteProduct
     {
         public int ProductId { get; set; }

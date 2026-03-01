@@ -54,6 +54,19 @@
             }
         }
 
+        public static string GetProductById
+        {
+            get
+            {
+                var sql = _configuration["Queries:GetProductById"];
+                if (string.IsNullOrWhiteSpace(sql))
+                {
+                    throw new InvalidOperationException("SQL query 'Queries:GetProductById' not found or empty in SqlQueries.xml. Searched: " + string.Join("; ", _searchedPaths));
+                }
+                return sql;
+            }
+        }
+
         public static string UpdateProduct
         {
             get
@@ -71,10 +84,23 @@
         {
             get
             {
-                var sql = _configuration["Queries:DeleteProduct"];
+                var sql = _configuration["Queries:InactiveProduct"];
                 if (string.IsNullOrWhiteSpace(sql))
                 {
-                    throw new InvalidOperationException("SQL query 'Queries:DeleteProduct' not found or empty in SqlQueries.xml. Searched: " + string.Join("; ", _searchedPaths));
+                    throw new InvalidOperationException("SQL query 'Queries:InactiveProduct' not found or empty in SqlQueries.xml. Searched: " + string.Join("; ", _searchedPaths));
+                }
+                return sql;
+            }
+        }
+
+        public static string ProductById
+        {
+            get
+            {
+                var sql = _configuration["Queries:GetProductById"];
+                if (string.IsNullOrWhiteSpace(sql))
+                {
+                    throw new InvalidOperationException("SQL query 'Queries:GetProductById' not found or empty in SqlQueries.xml. Searched: " + string.Join("; ", _searchedPaths));
                 }
                 return sql;
             }

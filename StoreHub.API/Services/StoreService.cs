@@ -75,6 +75,11 @@ namespace StoreHub.API.Services
             _logger.LogInformation("GetProduct Calling in Service");
             return await _storeRepository.GetProduct();
         }
+        public async Task<Response> GetProductById(GetProductById request)
+        {
+            _logger.LogInformation("GetProductById Calling in Service");
+            return await _storeRepository.GetProductById(request);
+        }
 
         public async Task<Response> UpdateProduct(UpdateProduct request)
         {

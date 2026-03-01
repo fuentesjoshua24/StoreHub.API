@@ -7,6 +7,7 @@ namespace StoreHub.API.Services
         public Task<Response> AddProduct(AddProduct request);
         public Task<Response> DeleteProduct(DeleteProduct request);
         public Task<Response> GetProduct();
+        public Task<Response> GetProductById(GetProductById request);
         public Task<Response> UpdateProduct(UpdateProduct request);
     }
 }

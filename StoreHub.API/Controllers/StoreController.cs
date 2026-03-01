@@ -85,6 +85,41 @@ namespace StoreHub.API.Controllers
                 Data = response.Products
             });
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetProductById(int id)
+        {
+            Response response = new Response();
+            _logger.LogInformation($"GetProductById API Calling in Controller...");
+            try
+            {
+                response = await _storeService.GetProductById(new GetProductById { ProductId = id });
+                if (!response.IsSuccess)
+                {
+                    return BadRequest(new
+                    {
+                        IsSuccess = response.IsSuccess,
+                        Message = response.Message,
+                        Data = response.Products
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+                _logger.LogError($"GetProductById API Error Occur : Message {ex.Message}");
+                return BadRequest(new { isSuccess = response.IsSuccess, Message = response.Message });
+            }
+
+            return Ok(new
+            {
+                IsSuccess = response.IsSuccess,
+                Message = response.Message,
+                Data = response.Products
+            });
+        }
+
         [HttpPut]
         public async Task<ActionResult> UpdateProduct(UpdateProduct request)
         {

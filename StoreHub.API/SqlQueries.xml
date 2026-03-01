@@ -13,6 +13,12 @@
 		WHERE IsActive=true;
 			]]>
 		</GetProduct>
+		<GetProductById>
+			<![CDATA[
+		SELECT * FROM storehub_db.product
+		WHERE ProductId=@ProductId;
+			]]>
+		</GetProductById>
 		<UpdateProduct>
 			<![CDATA[
 		UPDATE storehub_db.product
@@ -27,6 +33,13 @@
 		WHERE ProductId=@ProductId;
 			]]>
 		</UpdateProduct>
+		<InactiveProduct>
+			<![CDATA[
+		UPDATE storehub_db.product
+		SET IsActive=0
+		WHERE ProductId=@ProductId;
+			]]>
+		</InactiveProduct>
 		<DeleteProduct>
 			<![CDATA[
 		UPDATE storehub_db.product

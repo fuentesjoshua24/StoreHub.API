@@ -1,4 +1,7 @@
-﻿namespace StoreHub.API
+﻿using StoreHub.API.Repositories;
+using StoreHub.API.Services;
+
+namespace StoreHub.API
 {
     public class Startup
     {
@@ -12,17 +15,17 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            // Swagger (Swashbuckle)
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
 
             #region Dependency Injection
             // Register application services and repositories
-
+            services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IStoreService, StoreService>();
             #endregion
 
             #region Swagger Configuration
-
+            // Swagger (Swashbuckle)
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
             #endregion
         }
 

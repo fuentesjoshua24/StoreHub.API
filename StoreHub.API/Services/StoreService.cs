@@ -87,6 +87,12 @@ namespace StoreHub.API.Services
             return await _storeRepository.UpdateProduct(request);
         }
 
+        public async Task<Response> InactiveProduct(InactiveProduct request)
+        {
+            _logger.LogInformation("DeleteProduct Calling in Service");
+            return await _storeRepository.InactiveProduct(request);
+        }
+
         public async Task<Response> DeleteProduct(DeleteProduct request)
         {
             _logger.LogInformation("DeleteProduct Calling in Service");

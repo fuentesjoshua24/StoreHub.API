@@ -229,7 +229,7 @@ namespace StoreHub.API.Repositories
             string sqlText;
             try
             {
-                sqlText = SqlQueries.ProductById;
+                sqlText = SqlQueries.GetProductById;
             }
             catch (Exception ex)
             {
@@ -410,18 +410,18 @@ namespace StoreHub.API.Repositories
             return response;
         }
 
-        public async Task<Response> DeleteProduct(DeleteProduct request)
+        public async Task<Response> InactiveProduct(InactiveProduct request)
         {
-            _logger.LogInformation("DeleteProduct is Calling in Repository");
+            _logger.LogInformation("InactiveProduct is Calling in Repository");
             Response response = new Response();
             response.IsSuccess = true;
-            response.Message = "Product Deletion successfully.";
+            response.Message = "InactiveProduct successfully.";
 
             // Validate SQL
             string sqlText;
             try
             {
-                sqlText = SqlQueries.DeleteProduct;
+                sqlText = SqlQueries.InactiveProduct;
             }
             catch (Exception ex)
             {
@@ -465,15 +465,14 @@ namespace StoreHub.API.Repositories
                         }
 
                         response.IsSuccess = true;
-                        response.Message = "DeleteProduct successfully.";
-                        return response;
+                        response.Message = "InactiveProduct successfully.";
                     }
                     catch (Exception ex)
                     {
                         response.IsSuccess = false;
                         response.Message = ex.Message;
                         _logger.LogError($"Error occur: {ex.Message}");
-                        return response;
+                        
                     }
                     finally
                     {
@@ -492,6 +491,90 @@ namespace StoreHub.API.Repositories
                 _logger.LogError($"Error occur: {ex.Message}");
                 return response;
             }
+            return response;
+        }
+
+        public async Task<Response> DeleteProduct(DeleteProduct request)
+        {
+            _logger.LogInformation("DeleteProduct is Calling in Repository");
+            Response response = new Response();
+            response.IsSuccess = true;
+            response.Message = "DeleteProduct successfully.";
+
+            // Validate SQL
+            string sqlText;
+            try
+            {
+                sqlText = SqlQueries.DeleteProduct;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = $"SQL load failed: {ex.Message}";
+                return response;
+            }
+
+            if (string.IsNullOrWhiteSpace(sqlText))
+            {
+                response.IsSuccess = false;
+                response.Message = "DeleteProduct SQL is not configured.";
+                return response;
+            }
+
+            try
+            {
+
+                if (_MySqlConnection.State != System.Data.ConnectionState.Open)
+                {
+                    await _MySqlConnection.OpenAsync();
+                }
+
+                using (MySqlCommand sqlCommand = new MySqlCommand(sqlText, _MySqlConnection))
+                {
+                    try
+                    {
+                        sqlCommand.CommandType = System.Data.CommandType.Text;
+                        sqlCommand.CommandTimeout = 180;
+                        // Parameters for AddProduct (product fields)
+                        sqlCommand.Parameters.AddWithValue("@ProductId", request.ProductId);
+
+                        int status = await sqlCommand.ExecuteNonQueryAsync();
+                        if (status <= 0)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Query not executed.";
+                            _logger.LogError("Error occur: Query not executed.");
+                            return response;
+                        }
+
+                        response.IsSuccess = true;
+                        response.Message = "InactiveProduct successfully.";                      
+                    }
+                    catch (Exception ex)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = ex.Message;
+                        _logger.LogError($"Error occur: {ex.Message}");
+                        return response;
+                    }
+                    finally
+                    {
+                        //if (_MySqlConnection.State == System.Data.ConnectionState.Open)
+                        //{
+                        await _MySqlConnection.CloseAsync();
+                        await _MySqlConnection.DisposeAsync();
+                        //}
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+                _logger.LogError($"Error occur: {ex.Message}");
+                return response;
+            }
+            return response;
         }
 
     }

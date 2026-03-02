@@ -37,10 +37,15 @@
         public int ProductId { get; set; }
     }
 
-    public class DeleteProduct
+    public class InactiveProduct
     {
         public int ProductId { get; set; }
         public bool IsActive { get; set; }
+    }
+
+    public class DeleteProduct
+    {
+        public int ProductId { get; set; }
     }
 
     public class Product

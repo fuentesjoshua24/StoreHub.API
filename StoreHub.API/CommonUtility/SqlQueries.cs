@@ -80,7 +80,7 @@
             }
         }
 
-        public static string DeleteProduct
+        public static string InactiveProduct
         {
             get
             {
@@ -93,14 +93,14 @@
             }
         }
 
-        public static string ProductById
+        public static string DeleteProduct
         {
             get
             {
-                var sql = _configuration["Queries:GetProductById"];
+                var sql = _configuration["Queries:DeleteProduct"];
                 if (string.IsNullOrWhiteSpace(sql))
                 {
-                    throw new InvalidOperationException("SQL query 'Queries:GetProductById' not found or empty in SqlQueries.xml. Searched: " + string.Join("; ", _searchedPaths));
+                    throw new InvalidOperationException("SQL query 'Queries:DeleteProduct' not found or empty in SqlQueries.xml. Searched: " + string.Join("; ", _searchedPaths));
                 }
                 return sql;
             }

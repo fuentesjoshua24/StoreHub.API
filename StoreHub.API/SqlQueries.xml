@@ -42,8 +42,7 @@
 		</InactiveProduct>
 		<DeleteProduct>
 			<![CDATA[
-		UPDATE storehub_db.product
-		SET IsActive=0
+		DELETE FROM storehub_db.product
 		WHERE ProductId=@ProductId;
 			]]>
 		</DeleteProduct>

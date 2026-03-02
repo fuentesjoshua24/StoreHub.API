@@ -152,6 +152,37 @@ namespace StoreHub.API.Controllers
             });
         }
         [HttpPost]
+        public async Task<ActionResult> InactiveProduct(InactiveProduct request)
+        {
+            Response response = new Response();
+            _logger.LogInformation($"InactiveProduct API Calling in Controller...{JsonConvert.SerializeObject(request)}");
+            try
+            {
+                response = await _storeService.InactiveProduct(request);
+                if (!response.IsSuccess)
+                {
+                    return BadRequest(new
+                    {
+                        IsSuccess = response.IsSuccess,
+                        Message = response.Message
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+                _logger.LogError($"DeleteProduct API Error Occur : Message {ex.Message}");
+                return BadRequest(new { isSuccess = response.IsSuccess, Message = response.Message });
+            }
+
+            return Ok(new
+            {
+                IsSuccess = response.IsSuccess,
+                Message = response.Message
+            });
+        }
+        [HttpPost]
         public async Task<ActionResult> DeleteProduct(DeleteProduct request)
         {
             Response response = new Response();

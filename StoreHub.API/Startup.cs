@@ -12,17 +12,11 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            #region Swagger Configuration
             // Swagger (Swashbuckle)
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
-            #region Dependency Injection
-            // Register application services and repositories
-
-            #endregion
-
-            #region Swagger Configuration
-
             #endregion
         }
 
@@ -36,8 +30,6 @@
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store API V1");
                 });
             }
-
-            app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

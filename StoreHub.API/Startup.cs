@@ -27,6 +27,16 @@ namespace StoreHub.API
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             #endregion
+
+            #region CORS 
+            services.AddCors(options => 
+            { 
+                options.AddPolicy("AllowAngular", 
+                    policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200") // Angular dev server
+                                    .AllowAnyHeader() 
+                                    .AllowAnyMethod()); 
+            }); 
+            #endregion
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
@@ -40,7 +50,9 @@ namespace StoreHub.API
                 });
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+
+            app.UseCors("AllowAngular"); // <-- Add this before Authorization
 
             app.UseAuthorization();
 

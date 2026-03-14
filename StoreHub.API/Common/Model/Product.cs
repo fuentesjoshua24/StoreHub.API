@@ -67,10 +67,10 @@
         public DateTime UpdatedDate { get; set; }
     }
 
-    public class Response
+    public class ProductResponse
     {
         public string Message { get; set; }
         public bool IsSuccess { get; internal set; }
-        public List<Product> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; }
     }
 }

@@ -1,5 +1,11 @@
-﻿using StoreHub.API.Repositories;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using StoreHub.API.Common.Data;
+using StoreHub.API.CommonUtility;
+using StoreHub.API.Repositories;
 using StoreHub.API.Services;
+using System.Text;
 
 namespace StoreHub.API
 {
@@ -16,10 +22,24 @@ namespace StoreHub.API
         {
             services.AddControllers();
 
+            // EF Core DbContext with MySQL
+            var connectionString = Configuration.GetConnectionString("MySqlDBConnectionString");
+            services.AddDbContext<StoreHubDbContext>(options =>
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
             #region Dependency Injection
-            // Register application services and repositories
-            services.AddScoped<IStoreRepository, StoreRepository>();
-            services.AddScoped<IStoreService, StoreService>();
+            //services.AddScoped<IStoreRepository, StoreRepository>();
+            //services.AddScoped<IStoreService, StoreService>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILoginRepository, LoginRepository>();
+            services.AddScoped<ILoginService, LoginService>();
+
+            // Add your login/auth services here
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddSingleton<JwtUtil>();
             #endregion
 
             #region Swagger Configuration
@@ -29,14 +49,36 @@ namespace StoreHub.API
             #endregion
 
             #region CORS 
-            services.AddCors(options => 
-            { 
-                options.AddPolicy("AllowAngular", 
-                    policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200") // Angular dev server
-                                    .AllowAnyHeader() 
-                                    .AllowAnyMethod()); 
-            }); 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular",
+                    policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                                                 //"http://127.0.0.1:4200", "https://127.0.0.1:4200")
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod());
+            });
             #endregion
+
+            #region Add authentication & authorization services 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "BettingHub.API",
+                        ValidAudience = "BettingHub.Client",
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]))
+                    };
+
+                });
+            #endregion
+
+            services.AddAuthorization();
         }
 
         public void Configure(WebApplication app, IWebHostEnvironment env)
@@ -54,6 +96,7 @@ namespace StoreHub.API
 
             app.UseCors("AllowAngular"); // <-- Add this before Authorization
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

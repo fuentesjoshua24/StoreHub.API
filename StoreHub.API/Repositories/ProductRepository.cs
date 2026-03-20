@@ -8,6 +8,7 @@ namespace StoreHub.API.Repositories
     public interface IProductRepository
     {
         Task<ProductResponse> GetProduct();
+        Task<ProductResponse> GetProductById(int id);
     }
 
     public class ProductRepository : IProductRepository
@@ -36,5 +37,34 @@ namespace StoreHub.API.Repositories
             }
             return response;
         }
+
+        public async Task<ProductResponse> GetProductById(int id)
+        {
+            var response = new ProductResponse();
+            try
+            {
+                var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+
+                if (product != null)
+                {
+                    response.Products = new List<Product> { product };
+                    response.IsSuccess = true;
+                    response.Message = "Product fetched successfully.";
+                }
+                else
+                {
+                    response.Products = Enumerable.Empty<Product>();
+                    response.IsSuccess = false;
+                    response.Message = "Product not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = $"Error fetching product: {ex.Message}";
+            }
+            return response;
+        }
+
     }
 }

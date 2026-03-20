@@ -32,10 +32,13 @@ namespace StoreHub.API
             //services.AddScoped<IStoreService, StoreService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<IPromotionService, PromotionService>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILoginRepository, LoginRepository>();
-            services.AddScoped<ILoginService, LoginService>();
 
             // Add your login/auth services here
             services.AddScoped<ILoginService, LoginService>();

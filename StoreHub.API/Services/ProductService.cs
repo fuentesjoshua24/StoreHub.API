@@ -6,6 +6,8 @@ namespace StoreHub.API.Services
     public interface IProductService
     {
         Task<ProductResponse> GetProduct();
+        Task<ProductResponse> GetProductById(int id);
+
     }
 
     public class ProductService : IProductService
@@ -22,5 +24,12 @@ namespace StoreHub.API.Services
             // You can add extra business logic here if needed
             return await _productRepository.GetProduct();
         }
+
+        public async Task<ProductResponse> GetProductById(int id)
+        {
+            // You can add extra business logic here if needed
+            return await _productRepository.GetProductById(id);
+        }
+
     }
 }

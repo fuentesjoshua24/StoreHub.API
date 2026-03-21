@@ -65,6 +65,8 @@
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public ICollection<SellerMapping> SellerMappings { get; set; } = new List<SellerMapping>();
     }
 
     public class ProductResponse
@@ -73,5 +75,8 @@
         public bool IsSuccess { get; internal set; }
         public IEnumerable<Product> Products { get; set; }
     }
+
+ 
+
 
 }

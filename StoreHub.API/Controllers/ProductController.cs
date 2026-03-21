@@ -52,6 +52,46 @@ namespace StoreHub.API.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetProducts()
+        {
+            _logger.LogInformation("GetProducts API called in Controller...");
+
+            ProductResponse response = new ProductResponse();
+            try
+            {
+                response = await _productService.GetProducts();
+
+                if (!response.IsSuccess)
+                {
+                    return NotFound(new
+                    {
+                        IsSuccess = response.IsSuccess,
+                        Message = response.Message,
+                        Data = response.Products
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+                _logger.LogError($"GetProducts API Error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSuccess = response.IsSuccess,
+                    Message = response.Message
+                });
+            }
+
+            return Ok(new
+            {
+                IsSuccess = response.IsSuccess,
+                Message = response.Message,
+                Data = response.Products
+            });
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult> GetProductById(int id)
         {
@@ -92,81 +132,46 @@ namespace StoreHub.API.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetProductsOnSale()
+        {
+            _logger.LogInformation("GetProductsOnSale API called in Controller...");
+            ProductWithSaleResponse response = new ProductWithSaleResponse();
 
-        //[HttpGet]
-        //public async Task<ActionResult> GetCategory()
-        //{
-        //    CategoryResponse response = new CategoryResponse();
-        //    _logger.LogInformation("GetProduct API called in Controller...");
-        //    try
-        //    {
-        //        response = await _productService.GetCategory();
-        //        if (!response.IsSuccess)
-        //        {
-        //            return BadRequest(new
-        //            {
-        //                IsSuccess = response.IsSuccess,
-        //                Message = response.Message,
-        //                Data = response.Categories
-        //            });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.IsSuccess = false;
-        //        response.Message = ex.Message;
-        //        _logger.LogError($"GetProduct API Error: {ex.Message}");
-        //        return BadRequest(new { isSuccess = response.IsSuccess, Message = response.Message });
-        //    }
+            try
+            {
+                response = await _productService.GetProductsOnSale();
+                if (!response.IsSuccess)
+                {
+                    return NotFound(new
+                    {
+                        IsSuccess = response.IsSuccess,
+                        Message = response.Message,
+                        Data = response.Products
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+                _logger.LogError($"GetProductsOnSale API Error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    IsSuccess = response.IsSuccess,
+                    Message = response.Message
+                });
+            }
 
-        //    return Ok(new
-        //    {
-        //        IsSuccess = response.IsSuccess,
-        //        Message = response.Message,
-        //        Data = response.Categories
-        //    });
-        //}
+            return Ok(new
+            {
+                IsSuccess = response.IsSuccess,
+                Message = response.Message,
+                Data = response.Products
+            });
+        }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult> GetCategoryById(int id)
-        //{
-        //    _logger.LogInformation("GetCategoryById API called in Controller...");
 
-        //    CategoryResponse response = new CategoryResponse();
-        //    try
-        //    {
-        //        response = await _productService.GetCategoryById(id);
-
-        //        if (!response.IsSuccess)
-        //        {
-        //            return NotFound(new
-        //            {
-        //                IsSuccess = response.IsSuccess,
-        //                Message = response.Message,
-        //                Data = response.Categories
-        //            });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.IsSuccess = false;
-        //        response.Message = ex.Message;
-        //        _logger.LogError($"GetCategoryById API Error: {ex.Message}");
-        //        return StatusCode(StatusCodes.Status500InternalServerError, new
-        //        {
-        //            IsSuccess = response.IsSuccess,
-        //            Message = response.Message
-        //        });
-        //    }
-
-        //    return Ok(new
-        //    {
-        //        IsSuccess = response.IsSuccess,
-        //        Message = response.Message,
-        //        Data = response.Categories
-        //    });
-        //}
 
     }
-
 }

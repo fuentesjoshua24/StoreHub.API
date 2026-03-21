@@ -20,7 +20,13 @@ namespace StoreHub.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler =
+                        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                    options.JsonSerializerOptions.WriteIndented = true;
+                });
 
             // EF Core DbContext with MySQL
             var connectionString = Configuration.GetConnectionString("MySqlDBConnectionString");
@@ -36,6 +42,8 @@ namespace StoreHub.API
             services.AddScoped<IPromotionService, PromotionService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ISellerRepository, SellerRepository>();
+            services.AddScoped<ISellerService, SellerService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILoginRepository, LoginRepository>();

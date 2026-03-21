@@ -16,6 +16,9 @@ namespace StoreHub.API.Repositories
 
         // Update
         Task UpdateUser(User user);
+
+
+
     }
 
     public class UserRepository : IUserRepository
@@ -64,5 +67,9 @@ namespace StoreHub.API.Repositories
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        
+
+
     }
 }

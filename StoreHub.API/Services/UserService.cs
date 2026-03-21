@@ -9,6 +9,8 @@ namespace StoreHub.API.Services
         public Task<UserResponse> GetUser();
         // Add this for registration
         Task<User> Register(string email, string password);
+
+
     }
 
     public class UserService : IUserService
@@ -49,5 +51,9 @@ namespace StoreHub.API.Services
 
             return user;
         }
+
+        
+
+
     }
 }
